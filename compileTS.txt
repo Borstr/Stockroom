@@ -1,0 +1,2 @@
+//Compile .ts to .js file
+tsc
