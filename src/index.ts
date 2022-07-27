@@ -1,7 +1,11 @@
-"use strict";
-const dotenv = require('dotenv');
-const express = require('express');
-const mongoose = require('mongoose');
+'use strict';
+import dotenv from 'dotenv';
+import express, { Request, Response} from 'express';
+import mongoose from 'mongoose';
+import { ApolloServer, gql } from 'apollo-server-express';
+
+import typeDefs from '../typeDefs/typeDefs';
+import resolvers from '../resolvers/resolvers';
 
 dotenv.config();
 
@@ -9,20 +13,18 @@ const app = express();
 const port = process.env.SERVER_PORT;
 const DBPassword = process.env.MONGODB_PASSWORD;
 
-console.log(`mongodb://nadrukirekdb_MagazynNadrek:${DBPassword}@mongodb.nadrukirekdb.nazwa.pl:4063/nadrukirekdb_MagazynNadrek`);
+async function startServer() {
+    const apolloServer = new ApolloServer({ typeDefs, resolvers });
 
-mongoose
-    .connect(
-        `mongodb://nadrukirekdb_MagazynNadrek:mdlTpILoQ>3kJk3sbDi94l@mongodb.nadrukirekdb.nazwa.pl:4063/nadrukirekdb_MagazynNadrek`, 
-        { useNewUrlParser: true, user: 'nadrukirekdb_MagazynNadrek', pass: '' }
-    )
-    .then(() => {
-        // app.get('/', (req, res) => {
-        //     res.send('index')
-        // });
-        
-        // app.listen({ port }, () => {
-        //     console.log(`Server is running at http://localhost:8080`);
-        // });
-        console.log('test')
-    })
+    await apolloServer.start();
+
+    apolloServer.applyMiddleware({app});
+
+    app.get('/', (req:Request, res:Response) => res.send('index'));
+
+    await mongoose.connect(`mongodb+srv://Nadrek:${DBPassword}@cluster0.feu7b.mongodb.net/?retryWrites=true&w=majority`);
+
+    app.listen(port, () => console.log(`Server is running at http://localhost:${port}`));
+}
+
+startServer();
