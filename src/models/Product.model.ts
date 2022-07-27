@@ -1,14 +1,5 @@
 import mongoose from 'mongoose';
-
-interface ProductType {
-    title: String;
-    color: String;
-    inStock: Number;
-    inDelivery: Number;
-    size: String;
-    imagePath: String
-    id: String;
-};
+import { ProductType } from '../types';
 
 const ProductSchema = new mongoose.Schema<ProductType>({
     title: {
@@ -21,13 +12,15 @@ const ProductSchema = new mongoose.Schema<ProductType>({
     },
     inStock: {
         type: Number,
-        required: true
     },
     inDelivery: {
         type: Number
     },
-    size: {
-        type: String
+    width: {
+        type: Number
+    },
+    length: {
+        type: Number
     },
     imagePath: {
         type: String
