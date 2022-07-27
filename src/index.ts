@@ -4,8 +4,8 @@ import express, { Request, Response} from 'express';
 import mongoose from 'mongoose';
 import { ApolloServer, gql } from 'apollo-server-express';
 
-import typeDefs from '../typeDefs/typeDefs';
-import resolvers from '../resolvers/resolvers';
+import typeDefs from './graphql/typeDefs/typeDefs';
+import resolvers from './graphql/resolvers/resolvers';
 
 dotenv.config();
 
