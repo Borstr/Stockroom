@@ -20,7 +20,7 @@ interface ProductType {
     width?: number;
     length?: number
     imagePath?: string;
-    id?: string;
+    id: string;
 }
 
 export { 

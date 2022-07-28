@@ -2,6 +2,7 @@ import Product from '../../models/Product.model';
 import { OrderBy, ProductType } from '../../types';
 import { dataFilter, dataSorter } from '../../helpers';
 import { UserInputError } from 'apollo-server-express';
+import { StringDecoder } from 'string_decoder';
 
 const productResolvers = {
     Query: {
@@ -14,7 +15,7 @@ const productResolvers = {
                 if(!id) throw new UserInputError('Missing product ID.');
                 try {
                     return  await Product.findById(id);
-                } catch(e) {
+                } catch {
                     throw new UserInputError('We couldn\'find a product with a given ID.')
                 }
             },
@@ -25,7 +26,7 @@ const productResolvers = {
             context: any, 
             info: any
         ) => {
-            if(!filterBy) throw new UserInputError('Missing filter argument.')
+            if(!filterBy) throw new UserInputError('Missing filter data.')
             if(!sortBy) return Product.find(dataFilter(filterBy));
             return Product.find(dataFilter(filterBy)).sort(dataSorter(sortBy));
         },
@@ -35,7 +36,7 @@ const productResolvers = {
             context: any, 
             info: any
         ) => {
-            if(!sortBy) throw new UserInputError('Missing sorting argument.');
+            if(!sortBy) throw new UserInputError('Missing sorting data.');
             if(filterBy) return Product.find(dataFilter(filterBy)).sort(dataSorter(sortBy));
             return Product.find({}).sort(dataSorter(sortBy));
         }
@@ -52,26 +53,36 @@ const productResolvers = {
         },
         updateProduct: async (
             parent: any,
-            product: ProductType, 
+            { product }: { product: ProductType }, 
             context: any,
             info: any
         ) => {
-            const updatedFields: ProductType = {};
+            const updatedProduct: any = {};
             const fields: string[] = Object.keys(product);
+
+            if(fields.length <= 1) throw new UserInputError('Missing update data.');
+
             for(let i = 0; i < fields.length; i++) {
-                if(fields[i] !== 'id') {
-                    updatedFields[fields[i] as keyof ProductType] = product[fields[i]];
-                }
+                const productKey: string = fields[i];
+                if(productKey !== 'id') updatedProduct[productKey] = product[productKey as keyof ProductType];
             }
-            console.log(updatedFields);
-            return await Product.findByIdAndUpdate(product.id, {}, { new: true })
+
+            try {
+                return await Product.findByIdAndUpdate(product.id, updatedProduct, { new: true });
+            } catch {
+                throw new UserInputError('We couldn\'find a product with a given ID.');
+            }
         },
         deleteProduct: async (
             parent:any, 
             { id }: { id: number }, 
             context:any, 
             info:any) => {
-                return await Product.findByIdAndDelete(id)
+                try {
+                    return await Product.findByIdAndDelete(id)
+                } catch {
+                    throw new UserInputError('We couldn\'find a product with a given ID.');
+                }
             }
     }
 }
