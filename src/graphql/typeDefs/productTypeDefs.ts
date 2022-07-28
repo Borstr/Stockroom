@@ -4,6 +4,7 @@ const productTypeDefs = gql`
     type Product {
         id: ID
         title: String
+        model: String
         color: String
         inStock: Int
         inDelivery: Int
@@ -38,6 +39,7 @@ const productTypeDefs = gql`
     input ProductInput {
         title: String!
         color: String!
+        model: String
         inStock: Int
         inDelivery: Int
         width: Int
@@ -49,6 +51,7 @@ const productTypeDefs = gql`
         id: ID!
         title: String
         color: String
+        model: String
         inStock: Int
         inDelivery: Int
         width: Int

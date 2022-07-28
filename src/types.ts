@@ -12,9 +12,10 @@ interface Order {
     $eq?: string;
 }
 
-interface ProductType {
+interface Product {
     title?: string;
     color?: string;
+    model?: string;
     inStock?: number;
     inDelivery?: number;
     width?: number;
@@ -26,5 +27,5 @@ interface ProductType {
 export { 
     OrderBy, 
     Order, 
-    ProductType 
+    Product
 }

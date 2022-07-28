@@ -1,6 +1,6 @@
 import { Order, OrderBy } from './types';
 
-function dataFilter(data: [OrderBy]) {
+function filterData(data: [OrderBy]) {
     const filterData: any = {};
 
     for(let i: number = 0; i < data.length; i++) {
@@ -13,7 +13,7 @@ function dataFilter(data: [OrderBy]) {
     return filterData;
 }
 
-function dataSorter(data: [OrderBy]) {
+function sortData(data: [OrderBy]) {
     const sortData: any = {};
 
     for(let i: number = 0; i < data.length; i++) {
@@ -24,4 +24,4 @@ function dataSorter(data: [OrderBy]) {
     return sortData;
 }
 
-export { dataFilter, dataSorter }
+export { filterData, sortData }
