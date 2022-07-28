@@ -1,26 +1,26 @@
 interface OrderBy {
     field: any;
-    order: String;
-    value?: String;
+    order: string;
+    value?: string;
 }
 
 interface Order {
-    $gt?: String;
-    $lt?: String;
-    $gte?: String;
-    $lte?: String;
-    $eq?: String;
+    $gt?: string;
+    $lt?: string;
+    $gte?: string;
+    $lte?: string;
+    $eq?: string;
 }
 
 interface ProductType {
-    title?: String;
-    color?: String;
-    inStock?: Number;
-    inDelivery?: Number;
-    width?: Number;
-    length?: Number
-    imagePath?: String;
-    id?: String;
+    title?: string;
+    color?: string;
+    inStock?: number;
+    inDelivery?: number;
+    width?: number;
+    length?: number
+    imagePath?: string;
+    id?: string;
 }
 
 export { 

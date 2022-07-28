@@ -6,10 +6,10 @@ import { UserInputError } from 'apollo-server-express';
 const productResolvers = {
     Query: {
         getProduct: async (
-            parent:any, 
-            { id }:{ id:Number }, 
-            context:any, 
-            info:any
+            parent: any, 
+            { id }: { id: string }, 
+            context: any, 
+            info: any
         ) => {
                 if(!id) throw new UserInputError('Missing product ID.');
                 try {
@@ -20,20 +20,20 @@ const productResolvers = {
             },
         getAllProducts: async () => await Product.find(),
         getFilteredProducts: async (
-            parent:any, 
-            { filterBy, sortBy }:{ filterBy:[OrderBy], sortBy?:[OrderBy] }, 
-            context:any, 
-            info:any
+            parent: any, 
+            { filterBy, sortBy }: { filterBy: [OrderBy], sortBy?: [OrderBy] }, 
+            context: any, 
+            info: any
         ) => {
             if(!filterBy) throw new UserInputError('Missing filter argument.')
             if(!sortBy) return Product.find(dataFilter(filterBy));
             return Product.find(dataFilter(filterBy)).sort(dataSorter(sortBy));
         },
         getSortedProducts: async (
-            parent:any, 
-            { sortBy, filterBy }:{ sortBy:[OrderBy], filterBy?:[OrderBy] }, 
-            context:any, 
-            info:any
+            parent: any, 
+            { sortBy, filterBy }: { sortBy: [OrderBy], filterBy?: [OrderBy] }, 
+            context: any, 
+            info: any
         ) => {
             if(!sortBy) throw new UserInputError('Missing sorting argument.');
             if(filterBy) return Product.find(dataFilter(filterBy)).sort(dataSorter(sortBy));
@@ -42,25 +42,37 @@ const productResolvers = {
     },
     Mutation: {
         createProduct: async (
-            parent:any, 
-            { product: { color, title, inStock = 0, inDelivery = 0, width = 0, length = 0, imagePath = ''} }:{ product:ProductType }, 
-            context:any, 
-            info:any
+            parent: any, 
+            { product: { color, title, inStock = 0, inDelivery = 0, width = 0, length = 0, imagePath = ''} }: { product: ProductType }, 
+            context: any, 
+            info: any
         ) => {
             if(!color || !title) throw new UserInputError('Missing required fields.');
             return await Product.create({ color, title, inStock, inDelivery, width, length, imagePath });
         },
         updateProduct: async (
-            parent:any,
-            { product: { id, title, color, inStock, inDelivery, width, length, imagePath } }:{ product:ProductType }, 
-            context:any,
-            onfo:any
-        ) => await Product.findByIdAndUpdate(id, { title, color, inStock, inDelivery, width, length, imagePath }, { new: true }),
+            parent: any,
+            product: ProductType, 
+            context: any,
+            info: any
+        ) => {
+            const updatedFields: ProductType = {};
+            const fields: string[] = Object.keys(product);
+            for(let i = 0; i < fields.length; i++) {
+                if(fields[i] !== 'id') {
+                    updatedFields[fields[i] as keyof ProductType] = product[fields[i]];
+                }
+            }
+            console.log(updatedFields);
+            return await Product.findByIdAndUpdate(product.id, {}, { new: true })
+        },
         deleteProduct: async (
             parent:any, 
-            { id }:{ id:Number }, 
+            { id }: { id: number }, 
             context:any, 
-            info:any) => Product.findByIdAndDelete(id)
+            info:any) => {
+                return await Product.findByIdAndDelete(id)
+            }
     }
 }
 

@@ -31,8 +31,8 @@ const productTypeDefs = gql`
     type Query {
         getProduct(id: ID!): Product
         getAllProducts: [Product]
-        getFilteredProducts(filterBy: [FilterBy], sortBy: [SortBy]): [Product]
-        getSortedProducts(sortBy: [SortBy], filterBy: [FilterBy]): [Product]
+        getFilteredProducts(filterBy: [FilterBy]!, sortBy: [SortBy]): [Product]
+        getSortedProducts(sortBy: [SortBy]!, filterBy: [FilterBy]): [Product]
     }
 
     input ProductInput {
