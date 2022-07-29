@@ -1,3 +1,5 @@
+import mongoose from 'mongoose';
+
 interface OrderBy {
     field: any;
     order: string;
@@ -21,7 +23,7 @@ interface Product {
     width?: number;
     length?: number
     imagePath?: string;
-    id: string;
+    id: string | mongoose.Types.ObjectId;
 }
 
 export { 
