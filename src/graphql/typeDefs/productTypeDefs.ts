@@ -16,6 +16,7 @@ const productTypeDefs = gql`
     enum Order {
         ASC
         DESC
+        EQ
     }
 
     input FilterBy {

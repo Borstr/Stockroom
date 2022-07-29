@@ -6,7 +6,20 @@ function filterData(data: [OrderBy]) {
     for(let i: number = 0; i < data.length; i++) {
         const { order, field, value }: OrderBy = data[i];
         const valueField: Order = {};
-        valueField[order === 'ASC' ? '$gt' : '$lt'] = value;
+        let orderKey: keyof Order;
+        switch(order) {
+            case 'ASC':
+                orderKey = '$gt';
+                break;
+            case 'DESC':
+                orderKey = '$lt';
+                break;
+            default:
+                orderKey = '$eq';
+        }
+
+        valueField[orderKey] = value;
+
         filterData[field] = valueField;
     }
 

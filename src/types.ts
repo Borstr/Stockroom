@@ -23,7 +23,7 @@ interface Product {
     width?: number;
     length?: number
     imagePath?: string;
-    id: string | mongoose.Types.ObjectId;
+    id: string;
 }
 
 export { 

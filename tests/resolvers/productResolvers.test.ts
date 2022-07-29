@@ -1,16 +1,20 @@
-// CommonJS import instead of ES6 in order to mockingoose to work. 
-const mockingoose = require('mockingoose');
-
 import { UserInputError } from 'apollo-server-express';
 import mongoose from 'mongoose';
+import { Mockgoose } from 'mockgoose';
+import dotenv from 'dotenv';
 
 import productResolvers from '../../src/graphql/resolvers/productResolvers';
 import ProductModel from '../../src/models/Product.model';
 import { Product } from '../../src/types';
 
+const mockgoose = new Mockgoose(mongoose);
+
+dotenv.config();
+const DBPassword = process.env.MONGODB_PASSWORD;
+
 const mockData: Product[] = [
     {
-        id: new mongoose.Types.ObjectId('62e11d5bc9a34411570b4a4b'),
+        id: '',
         title: 'Pen',
         model: 'Lio',
         color: 'Red',
@@ -21,8 +25,30 @@ const mockData: Product[] = [
         imagePath: 'test'
     },
     {
-        id: new mongoose.Types.ObjectId('62e11d5bc9a34411570b4a4c'),
+        id: '',
         title: 'Pen',
+        model: 'Lio white',
+        color: 'Blue',
+        inStock: 1,
+        inDelivery: 2,
+        width: 3,
+        length: 4,
+        imagePath: 'test'
+    },
+    {
+        id: '',
+        title: 'Bag',
+        model: 'Lio white',
+        color: 'Blue',
+        inStock: 1,
+        inDelivery: 2,
+        width: 3,
+        length: 4,
+        imagePath: 'test'
+    },
+    {
+        id: '',
+        title: 'Lighter',
         model: 'Lio white',
         color: 'Blue',
         inStock: 1,
@@ -33,12 +59,26 @@ const mockData: Product[] = [
     }
 ];
 
+beforeAll((done) => {
+    mockgoose.prepareStorage().then(async () => await mongoose.connect(`mongodb+srv://Nadrek:${DBPassword}@cluster0.feu7b.mongodb.net/?retryWrites=true&w=majority`));
+    mongoose.connection.on('connected', async () => {
+        await ProductModel.create(mockData);
+        done();
+    });
+});
+
+afterAll((done) => {
+    mockgoose.helper.reset();
+    mockgoose.shutdown();
+    done()
+});
+
 describe('getProduct resolver', () => {
     it('should return one product', async () => {
-        mockingoose(ProductModel).toReturn(mockData[0], 'findOne');
-
-        const product = await productResolvers.Query.getProduct({}, { id: '62e11d5bc9a34411570b4a4b' }, {}, {});
-        expect(JSON.stringify(mockData[0]) === JSON.stringify(product));
+        const products: Product[] = await ProductModel.find({});
+        const product: Product | null = await productResolvers.Query.getProduct({}, { id: products[0].id ? products[0].id : '' }, {}, {});
+        
+        expect(JSON.stringify(products[0]) === JSON.stringify(product));
         expect(product).toHaveProperty('id');
         expect(product).toHaveProperty('title');
         expect(product).toHaveProperty('model');
@@ -51,8 +91,6 @@ describe('getProduct resolver', () => {
     });
 
     it('throws an error when id is missing', async () => {
-        mockingoose(ProductModel).toReturn(mockData[0], 'findOne');
-
         try {
             await productResolvers.Query.getProduct({}, { id: '' }, {}, {});
         } catch(err) {
@@ -61,8 +99,6 @@ describe('getProduct resolver', () => {
     });
 
     it('throws an error when id is incorrect', async () => {
-        mockingoose(ProductModel).toReturn(mockData[0], 'findOne');
-
         try {
             await productResolvers.Query.getProduct({}, { id: 'abc' }, {}, {});
         } catch(err) {
@@ -71,8 +107,6 @@ describe('getProduct resolver', () => {
     });
 
     it('throws an error if there is no user with a given id', async () => {
-        mockingoose(ProductModel).toReturn(mockData[0], 'findOne');
-
         try {
             await productResolvers.Query.getProduct({}, { id: '62e11d5bc9a34411570b4a4b' }, {}, {});
         } catch(err) {
@@ -83,12 +117,11 @@ describe('getProduct resolver', () => {
 
 describe('getAllProducts resolver', () => {
     it('should return 2 products', async () => {
-        mockingoose(ProductModel).toReturn(mockData, 'find');
-
+        const baseProducts: Product[] | null = await ProductModel.find({});
         const products: Product[] | null = await productResolvers.Query.getAllProducts();
 
         
-        expect(JSON.stringify(mockData) === JSON.stringify(products));
+        expect(JSON.stringify(baseProducts) === JSON.stringify(products));
 
         for(let product of products) {
             expect(product).toHaveProperty('id');
@@ -100,6 +133,18 @@ describe('getAllProducts resolver', () => {
             expect(product).toHaveProperty('width');
             expect(product).toHaveProperty('length');
             expect(product).toHaveProperty('imagePath');
+        }
+    });
+});
+
+describe('getFilteredProducts resolver', () => {
+    it('shows products equal to filter setting', async () => {
+        const products: Product[] | null = await productResolvers.Query.getFilteredProducts({}, { filterBy: [ { order: 'EQ', field: 'title', value: 'Pen' } ] }, {}, {});
+        
+        expect(products).toHaveLength(2);
+
+        for(let product of products) {
+            expect(product.title).toBe('Pen');
         }
     });
 });

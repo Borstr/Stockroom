@@ -15,7 +15,6 @@ const productResolvers = {
                 if(id.length < 24) throw new UserInputError('Incorrect id.');
 
                 const product: Product | null = await ProductModel.findById(id);
-                
                 if(!product) throw new UserInputError('No user with a given id.');
 
                 return product;
