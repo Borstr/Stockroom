@@ -25,6 +25,9 @@ const ProductSchema = new mongoose.Schema<Product>({
     length: {
         type: Number
     },
+    height: {
+        type: Number
+    },
     imagePath: {
         type: String
     }

@@ -1,10 +1,11 @@
 import { Order, OrderBy } from './types';
 
-function filterData(data: [OrderBy]) {
-    const filterData: any = {};
+function filterData(data: OrderBy[]) {
+    const filterData: any = [];
 
     for(let i: number = 0; i < data.length; i++) {
         const { order, field, value }: OrderBy = data[i];
+        const filterField: any = {};
         const valueField: Order = {};
         let orderKey: keyof Order;
         switch(order) {
@@ -20,13 +21,14 @@ function filterData(data: [OrderBy]) {
 
         valueField[orderKey] = value;
 
-        filterData[field] = valueField;
+        filterField[field] = valueField;
+        filterData.push(filterField);
     }
 
-    return filterData;
+    return { $and: filterData};
 }
 
-function sortData(data: [OrderBy]) {
+function sortData(data: OrderBy[]) {
     const sortData: any = {};
 
     for(let i: number = 0; i < data.length; i++) {

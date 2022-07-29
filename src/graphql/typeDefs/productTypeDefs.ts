@@ -10,6 +10,7 @@ const productTypeDefs = gql`
         inDelivery: Int
         width: Int
         length: Int
+        height: Int
         imagePath: String
     }
 
@@ -45,6 +46,7 @@ const productTypeDefs = gql`
         inDelivery: Int
         width: Int
         length: Int
+        height: Int
         imagePath: String
     }
 
@@ -57,6 +59,7 @@ const productTypeDefs = gql`
         inDelivery: Int
         width: Int
         length: Int
+        height: Int
         imagePath: String
     }
 

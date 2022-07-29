@@ -21,9 +21,10 @@ interface Product {
     inStock?: number;
     inDelivery?: number;
     width?: number;
-    length?: number
+    length?: number;
+    height?: number;
     imagePath?: string;
-    id: string;
+    id?: string;
 }
 
 export { 
