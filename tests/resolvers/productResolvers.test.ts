@@ -19,10 +19,21 @@ const mockData: Product[] = [
         width: 3,
         length: 4,
         imagePath: 'test'
+    },
+    {
+        id: new mongoose.Types.ObjectId('62e11d5bc9a34411570b4a4c'),
+        title: 'Pen',
+        model: 'Lio white',
+        color: 'Blue',
+        inStock: 1,
+        inDelivery: 2,
+        width: 3,
+        length: 4,
+        imagePath: 'test'
     }
 ];
 
-describe('Testing getProduct resolver', () => {
+describe('getProduct resolver', () => {
     it('should return one product', async () => {
         mockingoose(ProductModel).toReturn(mockData[0], 'findOne');
 
@@ -66,6 +77,29 @@ describe('Testing getProduct resolver', () => {
             await productResolvers.Query.getProduct({}, { id: '62e11d5bc9a34411570b4a4b' }, {}, {});
         } catch(err) {
             expect(err).toStrictEqual(new UserInputError('No user with a given id.'));
+        }
+    });
+});
+
+describe('getAllProducts resolver', () => {
+    it('should return 2 products', async () => {
+        mockingoose(ProductModel).toReturn(mockData, 'find');
+
+        const products: Product[] | null = await productResolvers.Query.getAllProducts();
+
+        
+        expect(JSON.stringify(mockData) === JSON.stringify(products));
+
+        for(let product of products) {
+            expect(product).toHaveProperty('id');
+            expect(product).toHaveProperty('title');
+            expect(product).toHaveProperty('model');
+            expect(product).toHaveProperty('color');
+            expect(product).toHaveProperty('inStock');
+            expect(product).toHaveProperty('inDelivery');
+            expect(product).toHaveProperty('width');
+            expect(product).toHaveProperty('length');
+            expect(product).toHaveProperty('imagePath');
         }
     });
 });
