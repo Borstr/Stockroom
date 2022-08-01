@@ -366,7 +366,7 @@ describe('updateProduct resolver', () => {
                 { 
                     product: { 
                         title: 'Test', 
-                        id: ''
+                        id: '123456789012345678901234'
                     }
                 }, 
                 {}, 
@@ -378,22 +378,20 @@ describe('updateProduct resolver', () => {
     });
 
     it('throws error if provided id is incorrect', async () => {
-        it('throws error if there is no data for update', async () => {
-            try {
-                await productResolvers.Mutation.updateProduct(
-                    {}, 
-                    { 
-                        product: { 
-                            id: 'a'
-                        }
-                    }, 
-                    {}, 
-                    {}
-                );
-            } catch(err) {
-                expect(err).toStrictEqual(new UserInputError('Missing update data.'));
-            }
-        });
+        try {
+            await productResolvers.Mutation.updateProduct(
+                {}, 
+                { 
+                    product: { 
+                        id: 'a'
+                    }
+                }, 
+                {}, 
+                {}
+            );
+        } catch(err) {
+            expect(err).toStrictEqual(new UserInputError('Incorrect id.'));
+        }
     });
 
     it('throws error if there is no data for update', async () => {
@@ -402,7 +400,7 @@ describe('updateProduct resolver', () => {
                 {}, 
                 { 
                     product: { 
-                        id: ''
+                        id: '123456789012345678901234'
                     }
                 }, 
                 {}, 
@@ -416,14 +414,43 @@ describe('updateProduct resolver', () => {
 
 describe('deleteProduct resolver', () => {
     it('deletes product with a given id', async () => {
+        const newProduct: Product | null = await ProductModel.create({ title: 'Test', color: 'red' });
 
+        if(newProduct && newProduct.id) {
+            await productResolvers.Mutation.deleteProduct({}, { id: newProduct.id }, {}, {});
+            
+            const deletedProduct = await ProductModel.findById(newProduct.id);
+            expect(deletedProduct).toBe(null);
+        }
     });
 
     it('throws error if there is no product with a given id', async () => {
-
+        try {
+            await productResolvers.Mutation.deleteProduct(
+                {}, 
+                { 
+                    id: '123456789012345678901234'
+                }, 
+                {}, 
+                {}
+            );
+        } catch(err) {
+            expect(err).toStrictEqual(new UserInputError('We couldn\'find a product with a given ID.'));
+        }
     });
 
     it('throws error if provided id is incorrect', async () => {
-
+        try {
+            await productResolvers.Mutation.deleteProduct(
+                {}, 
+                { 
+                    id: '1'
+                }, 
+                {}, 
+                {}
+            );
+        } catch(err) {
+            expect(err).toStrictEqual(new UserInputError('Incorrect id.'));
+        }
     });
 });
