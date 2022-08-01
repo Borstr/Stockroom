@@ -4,8 +4,7 @@ import express, { Request, Response} from 'express';
 import mongoose from 'mongoose';
 import { ApolloServer, gql } from 'apollo-server-express';
 
-import typeDefs from './graphql/typeDefs/typeDefs';
-import resolvers from './graphql/resolvers/resolvers';
+import schema from './graphql/schema';
 
 dotenv.config();
 
@@ -14,7 +13,7 @@ const port = process.env.SERVER_PORT;
 const DBPassword = process.env.MONGODB_PASSWORD;
 
 async function startServer() {
-    const apolloServer = new ApolloServer({ typeDefs, resolvers });
+    const apolloServer = new ApolloServer(schema);
 
     await apolloServer.start();
 

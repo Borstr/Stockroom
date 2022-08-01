@@ -27,8 +27,22 @@ interface Product {
     id?: string;
 }
 
+interface Task {
+    title: string;
+    products: ProductInDemand[];
+    entryDate: Date;
+    finishDate: Date;
+}
+
+interface ProductInDemand {
+    product: Product;
+    amount: number;
+}
+
 export { 
     OrderBy, 
     Order, 
-    Product
+    Product,
+    Task,
+    ProductInDemand
 }

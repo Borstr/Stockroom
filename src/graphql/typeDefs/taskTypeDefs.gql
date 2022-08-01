@@ -1,0 +1,42 @@
+type ProductInDemand {
+    product: Product!
+    amount: Int!
+}
+
+type Task {
+    id: ID
+    title: String
+    products: [ProductInDemand]
+    entryDate: String
+    finishDate: String
+}
+
+extend type Query {
+    getTask(id: ID!): Task
+    getTasks: [Task]
+}
+
+input ProductInDemandInput { 
+    product: ProductInput!
+    amount: Int!
+}
+
+input TaskInput {
+    title: String!
+    products: [ProductInDemandInput]!
+    entryDate: String!
+    finishDate: String!
+}
+
+input TaskUpdateInput {
+    title: String
+    products: [ProductInDemandInput]
+    entryDate: String
+    finishDate: String
+}
+
+extend type Mutation {
+    createTask(task: TaskInput!): Task
+    updateTask(task: TaskUpdateInput!): Task
+    deleteTask(id: ID!): Task
+}
