@@ -11,11 +11,11 @@ const productResolvers = {
             context: any, 
             info: any
         ) => {
-                if(!id) throw new UserInputError('Missing product ID.');
-                if(id.length < 24) throw new UserInputError('Incorrect id.');
+                if(!id) throw new UserInputError('Missing product id.');
+                if(id.length !== 24) throw new UserInputError('Incorrect id.');
 
                 const product: Product | null = await ProductModel.findById(id);
-                if(!product) throw new UserInputError('No user with a given id.');
+                if(!product) throw new UserInputError('No product with a given id.');
 
                 return product;
             },

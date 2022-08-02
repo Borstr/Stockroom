@@ -98,7 +98,7 @@ describe('getProduct resolver', () => {
         try {
             await productResolvers.Query.getProduct({}, { id: '' }, {}, {});
         } catch(err) {
-            expect(err).toStrictEqual(new UserInputError('Missing product ID.'));
+            expect(err).toStrictEqual(new UserInputError('Missing product id.'));
         }
     });
 
@@ -114,7 +114,7 @@ describe('getProduct resolver', () => {
         try {
             await productResolvers.Query.getProduct({}, { id: '62e11d5bc9a34411570b4a4b' }, {}, {});
         } catch(err) {
-            expect(err).toStrictEqual(new UserInputError('No user with a given id.'));
+            expect(err).toStrictEqual(new UserInputError('No product with a given id.'));
         }
     });
 });
