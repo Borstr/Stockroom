@@ -1,6 +1,5 @@
 import mongoose from 'mongoose';
 import { Task } from '../types';
-import { ProductSchema } from './Product.model';
 
 const TaskSchema = new mongoose.Schema<Task>({
     title: {
@@ -8,8 +7,15 @@ const TaskSchema = new mongoose.Schema<Task>({
         required: true
     },
     products: [{
-        child: ProductSchema,
-        amount: Number
+        product: {
+            type: mongoose.Types.ObjectId,
+            ref: 'product',
+            required: true
+        },
+        amount: {
+            type: Number,
+            required: true
+        }
     }],
     entryDate: {
         type: Date,

@@ -17,7 +17,7 @@ extend type Query {
 }
 
 input ProductInDemandInput { 
-    product: ProductInput!
+    product: ID!
     amount: Int!
 }
 

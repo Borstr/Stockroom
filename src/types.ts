@@ -36,7 +36,7 @@ interface Task {
 }
 
 interface ProductInDemand {
-    product: Product;
+    product: Product | mongoose.Types.ObjectId | string;
     amount: number;
 }
 

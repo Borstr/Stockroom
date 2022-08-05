@@ -149,9 +149,36 @@ describe('getTasks resolver', () => {
 
 describe('createTask resolver', () => {
     it('should create task with given data', async () => {
-        const tasks: Task[] | null = await TaskModel.find({});
+        const newTask: Task | null = await taskResolvers.Mutation.createTask(
+            {}, 
+            {
+                task: {
+                    id: '',
+                    title: 'Test',
+                    entryDate: '05.08.2022',
+                    finishDate: '05.08.2022',
+                    products: [{
+                        product: {
+                            title: 'Pen',
+                            color: 'red',
+                            model: 'Lio'
+                        },
+                        amount: 100
+                    }]
+                }
+            },
+            {},
+            {}
+        );
 
-        console.log(tasks);
+        console.log(newTask);
+
+        const task: Task | null = await TaskModel.findById(newTask.id);
+
+        expect(newTask).not.toBe(null);
+        expect(task).not.toBe(null);
+        
+        if(task) expect(newTask.id).toBe(task.id);
     });
 });
 
