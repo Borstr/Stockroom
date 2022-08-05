@@ -1,13 +1,10 @@
 import { UserInputError } from 'apollo-server-express';
 import mongoose from 'mongoose';
-import { Mockgoose } from 'mockgoose';
 import dotenv from 'dotenv';
 
 import productResolvers from '../../src/graphql/resolvers/productResolvers';
 import ProductModel from '../../src/models/Product.model';
 import { Product } from '../../src/types';
-
-const mockgoose = new Mockgoose(mongoose);
 
 dotenv.config();
 const DBPassword = process.env.MONGODB_PASSWORD;
@@ -63,18 +60,21 @@ const mockData: Product[] = [
     }
 ];
 
-beforeAll((done) => {
-    mockgoose.prepareStorage().then(async () => await mongoose.connect(`mongodb+srv://Nadrek:${DBPassword}@cluster0.feu7b.mongodb.net/?retryWrites=true&w=majority`));
-    mongoose.connection.on('connected', async () => {
-        await ProductModel.create(mockData);
-        done();
-    });
+beforeAll(async () => {
+    await mongoose.connect(`mongodb+srv://Nadrek:${DBPassword}@cluster0.feu7b.mongodb.net/Test?retryWrites=true&w=majority`);
 });
 
-afterAll((done) => {
-    mockgoose.helper.reset();
-    mockgoose.shutdown();
-    done()
+beforeEach(async () => {
+    await ProductModel.create(mockData);
+});
+
+afterEach(async () => {
+    await ProductModel.deleteMany();
+});
+
+afterAll(async () => {
+    await ProductModel.deleteMany();
+    await mongoose.disconnect();
 });
 
 describe('getProduct resolver', () => {

@@ -1,13 +1,10 @@
 import { UserInputError } from 'apollo-server-express';
 import mongoose from 'mongoose';
-import { Mockgoose } from 'mockgoose';
 import dotenv from 'dotenv';
 
 import taskResolvers from '../../src/graphql/resolvers/taskResolvers';
 import TaskModel from '../../src/models/Task.model';
 import { Task } from '../../src/types';
-
-const mockgoose = new Mockgoose(mongoose);
 
 dotenv.config();
 const DBPassword = process.env.MONGODB_PASSWORD;
@@ -71,18 +68,21 @@ const mockData: Task[] = [
     }
 ];
 
-beforeAll((done) => {
-    mockgoose.prepareStorage().then(async () => await mongoose.connect(`mongodb+srv://Nadrek:${DBPassword}@cluster0.feu7b.mongodb.net/?retryWrites=true&w=majority`));
-    mongoose.connection.on('connected', async () => {
-        await TaskModel.create(mockData);
-        done();
-    });
+beforeAll(async () => {
+    await mongoose.connect(`mongodb+srv://Nadrek:${DBPassword}@cluster0.feu7b.mongodb.net/Test?retryWrites=true&w=majority`);
 });
 
-afterAll((done) => {
-    mockgoose.helper.reset();
-    mockgoose.shutdown();
-    done()
+beforeEach(async () => {
+    await TaskModel.create(mockData);
+});
+
+afterEach(async () => {
+    await TaskModel.deleteMany();
+});
+
+afterAll(async () => {
+    await TaskModel.deleteMany();
+    await mongoose.disconnect();
 });
 
 describe('getTask resolver', () => {
@@ -137,7 +137,7 @@ describe('getTasks resolver', () => {
     });
 
     it('throws error when there are no tasks', async () => {
-        await TaskModel.deleteMany({ entryDate: '02.08.2022' });
+        await TaskModel.deleteMany();
 
         try {
             await taskResolvers.Query.getTasks();
@@ -148,7 +148,11 @@ describe('getTasks resolver', () => {
 });
 
 describe('createTask resolver', () => {
+    it('should create task with given data', async () => {
+        const tasks: Task[] | null = await TaskModel.find({});
 
+        console.log(tasks);
+    });
 });
 
 describe('updateTask resolver', () => {

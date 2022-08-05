@@ -21,7 +21,7 @@ async function startServer() {
 
     app.get('/', (req:Request, res:Response) => res.send('index'));
 
-    await mongoose.connect(`mongodb+srv://Nadrek:${DBPassword}@cluster0.feu7b.mongodb.net/?retryWrites=true&w=majority`);
+    await mongoose.connect(`mongodb+srv://Nadrek:${DBPassword}@cluster0.feu7b.mongodb.net/Nadrek?retryWrites=true&w=majority`);
 
     app.listen(port, () => console.log(`Server is running at http://localhost:${port}`));
 }
