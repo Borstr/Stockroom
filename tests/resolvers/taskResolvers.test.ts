@@ -11,56 +11,40 @@ const DBPassword = process.env.MONGODB_PASSWORD;
 
 const mockData: Task[] = [
     { 
-        id: '123456789012345678901234',
+        id: '12345678901234567890123a',
         title: 'Task', 
         products: [{
-            product: {
-                id: '123456789012345678901234',
-                title: 'Pen',
-                color: 'Red',
-            },
+            product: '12345678901234567890123a',
             amount: 100
         }],
         entryDate: '02.08.2022',
         finishDate: '03.08.2022'
     },
     { 
-        id: '123456789012345678901235',
+        id: '12345678901234567890123c',
         title: 'Task2', 
         products: [{
-            product: {
-                id: '123456789012345678901244',
-                title: 'Pen',
-                color: 'Blue',
-            },
+            product: '12345678901234567890124c',
             amount: 100
         }],
         entryDate: '02.08.2022',
         finishDate: '03.08.2022'
     },
     { 
-        id: '123456789012345678901236',
+        id: '12345678901234567890123b',
         title: 'Task3', 
         products: [{
-            product: {
-                id: '123456789012345678901244',
-                title: 'Pen',
-                color: 'Blue',
-            },
+            product: '12345678901234567890124b',
             amount: 100
         }],
         entryDate: '02.08.2022',
         finishDate: '03.08.2022'
     },
     { 
-        id: '123456789012345678901237',
+        id: '12345678901234567890123d',
         title: 'Task4', 
         products: [{
-            product: {
-                id: '123456789012345678901244',
-                title: 'Pen',
-                color: 'Blue',
-            },
+            product: '12345678901234567890124d',
             amount: 100
         }],
         entryDate: '02.08.2022',

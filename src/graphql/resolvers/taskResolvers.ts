@@ -9,14 +9,14 @@ const taskResolvers = {
             if(!id) throw new UserInputError('Missing task id.');
             if(id.length !== 24) throw new UserInputError('Incorrect id.');
 
-            const task: Task | null = await TaskModel.findById(id);
+            const task: Task | null = await TaskModel.findById(id).populate('products.product');
 
             if(!task) throw new UserInputError('No task with a given id.');
 
             return task;
         },
         getTasks: async () => {
-            const tasks: Task[] | null = await TaskModel.find({});
+            const tasks: Task[] | null = await TaskModel.find({}).populate('products.product');
 
             if(!tasks) throw new UserInputError('No tasks found.');
 
