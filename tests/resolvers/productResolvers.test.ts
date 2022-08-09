@@ -6,66 +6,17 @@ import productResolvers from '../../src/graphql/resolvers/productResolvers';
 import ProductModel from '../../src/models/Product.model';
 import { Product } from '../../src/types';
 
+import { productData } from '../mockData';
+
 dotenv.config();
 const DBPassword = process.env.MONGODB_PASSWORD;
-
-const mockData: Product[] = [
-    {
-        id: '',
-        title: 'Pen',
-        model: 'Lio',
-        color: 'Red',
-        inStock: 4,
-        inDelivery: 1,
-        width: 3,
-        length: 4,
-        height: 20,
-        imagePath: 'test'
-    },
-    {
-        id: '',
-        title: 'Pen',
-        model: 'Lio white',
-        color: 'Blue',
-        inStock: 3,
-        inDelivery: 2,
-        width: 3,
-        length: 4,
-        height: 15,
-        imagePath: 'test'
-    },
-    {
-        id: '',
-        title: 'Bag',
-        model: 'Lio white',
-        color: 'Blue',
-        inStock: 1,
-        inDelivery: 4,
-        width: 3,
-        length: 4,
-        height: 11,
-        imagePath: 'test'
-    },
-    {
-        id: '',
-        title: 'Lighter',
-        model: 'Lio white',
-        color: 'Blue',
-        inStock: 2,
-        inDelivery: 3,
-        width: 3,
-        length: 4,
-        height: 10,
-        imagePath: 'test'
-    }
-];
 
 beforeAll(async () => {
     await mongoose.connect(`mongodb+srv://Nadrek:${DBPassword}@cluster0.feu7b.mongodb.net/Test?retryWrites=true&w=majority`);
 });
 
 beforeEach(async () => {
-    await ProductModel.create(mockData);
+    await ProductModel.create(productData);
 });
 
 afterEach(async () => {
@@ -91,6 +42,7 @@ describe('getProduct resolver', () => {
         expect(product).toHaveProperty('inDelivery');
         expect(product).toHaveProperty('width');
         expect(product).toHaveProperty('length');
+        expect(product).toHaveProperty('height');
         expect(product).toHaveProperty('imagePath');
     });
 

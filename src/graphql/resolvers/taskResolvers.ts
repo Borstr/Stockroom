@@ -28,31 +28,18 @@ const taskResolvers = {
             if(!title) throw new UserInputError('Missing title.');
             if(!entryDate) throw new UserInputError('Missing entry date.');
             if(!finishDate) throw new UserInputError('Missing finish date.');
-            if(!products || products.length < 1) throw new UserInputError('Missing title.');
-
-            const taskProducts: ProductInDemand[] | null = [];
+            if(!products || products.length < 1) throw new UserInputError('Missing products.');
             
-            if(products) {
-                for(let taskProduct of products) {
-                    const product: Product | null = await ProductModel.findById(taskProduct.product);
-                    
-                    if(product) {
-                        taskProducts.push({
-                            product,
-                            amount: taskProduct.amount
-                        })
-                    }
-                }
-            }
-            
-            const task: Task | null = await TaskModel.create({ title, entryDate, finishDate, products: taskProducts });
-
-            console.log(await TaskModel.findById(task.id).populate({ path: 'products', select: 'product' }));
+            const task: Task | null = await (await TaskModel.create({ title, entryDate, finishDate, products })).populate('products.product');
 
             return task;
         },
-        updateTask: () => {},
-        deleteTask: () => {}
+        updateTask: async (parent: any, { task: { title, entryDate, finishDate, products }}: { task: Task }, context: any, info: any) => {
+            
+        },
+        deleteTask: async (parent: any, { task: { title, entryDate, finishDate, products }}: { task: Task }, context: any, info: any) => {
+
+        }
     }
 }
 

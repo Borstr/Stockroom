@@ -4,68 +4,31 @@ import dotenv from 'dotenv';
 
 import taskResolvers from '../../src/graphql/resolvers/taskResolvers';
 import TaskModel from '../../src/models/Task.model';
-import { Task } from '../../src/types';
+import ProductModel from '../../src/models/Product.model';
+import { Task, Product } from '../../src/types';
+
+import { productData, taskData } from '../mockData';
 
 dotenv.config();
 const DBPassword = process.env.MONGODB_PASSWORD;
-
-const mockData: Task[] = [
-    { 
-        id: '12345678901234567890123a',
-        title: 'Task', 
-        products: [{
-            product: '12345678901234567890123a',
-            amount: 100
-        }],
-        entryDate: '02.08.2022',
-        finishDate: '03.08.2022'
-    },
-    { 
-        id: '12345678901234567890123c',
-        title: 'Task2', 
-        products: [{
-            product: '12345678901234567890124c',
-            amount: 100
-        }],
-        entryDate: '02.08.2022',
-        finishDate: '03.08.2022'
-    },
-    { 
-        id: '12345678901234567890123b',
-        title: 'Task3', 
-        products: [{
-            product: '12345678901234567890124b',
-            amount: 100
-        }],
-        entryDate: '02.08.2022',
-        finishDate: '03.08.2022'
-    },
-    { 
-        id: '12345678901234567890123d',
-        title: 'Task4', 
-        products: [{
-            product: '12345678901234567890124d',
-            amount: 100
-        }],
-        entryDate: '02.08.2022',
-        finishDate: '03.08.2022'
-    }
-];
 
 beforeAll(async () => {
     await mongoose.connect(`mongodb+srv://Nadrek:${DBPassword}@cluster0.feu7b.mongodb.net/Test?retryWrites=true&w=majority`);
 });
 
 beforeEach(async () => {
-    await TaskModel.create(mockData);
+    await TaskModel.create(taskData);
+    await ProductModel.create(productData);
 });
 
 afterEach(async () => {
     await TaskModel.deleteMany();
+    await ProductModel.deleteMany();
 });
 
 afterAll(async () => {
     await TaskModel.deleteMany();
+    await ProductModel.deleteMany();
     await mongoose.disconnect();
 });
 
@@ -133,36 +96,144 @@ describe('getTasks resolver', () => {
 
 describe('createTask resolver', () => {
     it('should create task with given data', async () => {
-        const newTask: Task | null = await taskResolvers.Mutation.createTask(
-            {}, 
-            {
-                task: {
-                    id: '',
-                    title: 'Test',
-                    entryDate: '05.08.2022',
-                    finishDate: '05.08.2022',
-                    products: [{
-                        product: {
-                            title: 'Pen',
-                            color: 'red',
-                            model: 'Lio'
-                        },
-                        amount: 100
-                    }]
-                }
-            },
-            {},
-            {}
-        );
-
-        console.log(newTask);
-
-        const task: Task | null = await TaskModel.findById(newTask.id);
-
-        expect(newTask).not.toBe(null);
-        expect(task).not.toBe(null);
+        const product: Product | null = await ProductModel.findOne();
         
-        if(task) expect(newTask.id).toBe(task.id);
+        if(product && product.id) {
+            const newTask: Task | null = await taskResolvers.Mutation.createTask(
+                {}, 
+                {
+                    task: {
+                        id: '',
+                        title: 'Test',
+                        entryDate: '05.08.2022',
+                        finishDate: '05.08.2022',
+                        products: [{
+                            product: product.id,
+                            amount: 100
+                        }]
+                    }
+                },
+                {},
+                {}
+            );
+    
+            const task: Task | null = await TaskModel.findById(newTask.id).populate('products.product');
+    
+            expect(newTask).not.toBe(null);
+            expect(task).not.toBe(null);
+
+            if(task) {
+                expect(task.products[0].product).toHaveProperty('title');
+                expect(task.products[0].product).toHaveProperty('color');
+                expect(task.products[0].product).toHaveProperty('model');
+                expect(task.products[0].product).toHaveProperty('inStock');
+                expect(task.products[0].product).toHaveProperty('inDelivery');
+                expect(task.products[0].product).toHaveProperty('width');
+                expect(task.products[0].product).toHaveProperty('length');
+                expect(task.products[0].product).toHaveProperty('height');
+
+                expect(newTask.id).toBe(task.id);
+            }
+        }
+    });
+
+    it('throws error if title is missing', async () => {
+        try {
+            const product: Product | null = await ProductModel.findOne();
+
+            await taskResolvers.Mutation.createTask(
+                {}, 
+                {
+                    task: {
+                        id: '',
+                        title: '',
+                        entryDate: '05.08.2022',
+                        finishDate: '05.08.2022',
+                        products: [{
+                            product: (product && product.id) ? product.id : '',
+                            amount: 100
+                        }]
+                    }
+                },
+                {},
+                {}
+            );
+        } catch(err) {
+            expect(err).toStrictEqual(new UserInputError('Missing title.'));
+        }
+    });
+
+    it('throws error if entry date is missing', async () => {
+        try {
+            const product: Product | null = await ProductModel.findOne();
+
+            await taskResolvers.Mutation.createTask(
+                {}, 
+                {
+                    task: {
+                        id: '',
+                        title: 'Test',
+                        entryDate: '',
+                        finishDate: '05.08.2022',
+                        products: [{
+                            product: (product && product.id) ? product.id : '',
+                            amount: 100
+                        }]
+                    }
+                },
+                {},
+                {}
+            );
+        } catch(err) {
+            expect(err).toStrictEqual(new UserInputError('Missing entry date.'));
+        }
+    });
+
+    it('throws error if finish date is missing', async () => {
+        try {
+            const product: Product | null = await ProductModel.findOne();
+
+            await taskResolvers.Mutation.createTask(
+                {}, 
+                {
+                    task: {
+                        id: '',
+                        title: 'Test',
+                        entryDate: '05.08.2022',
+                        finishDate: '',
+                        products: [{
+                            product: (product && product.id) ? product.id : '',
+                            amount: 100
+                        }]
+                    }
+                },
+                {},
+                {}
+            );
+        } catch(err) {
+            expect(err).toStrictEqual(new UserInputError('Missing finish date.'));
+        }
+    });
+
+    it('throws error if there are no products', async () => {
+        try {
+            await taskResolvers.Mutation.createTask(
+                {}, 
+                {
+                    task: {
+                        id: '',
+                        title: 'Test',
+                        entryDate: '05.08.2022',
+                        finishDate: '05.08.2022',
+                        products: []
+                    }
+                },
+                {},
+                {}
+            );
+        } catch(err) {
+            expect(err).toStrictEqual(new UserInputError('Missing products.'));
+        }
     });
 });
 
