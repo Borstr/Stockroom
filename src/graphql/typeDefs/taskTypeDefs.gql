@@ -29,6 +29,7 @@ input TaskInput {
 }
 
 input TaskUpdateInput {
+    id: ID!
     title: String
     products: [ProductInDemandInput]
     entryDate: String

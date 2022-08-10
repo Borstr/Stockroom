@@ -238,7 +238,23 @@ describe('createTask resolver', () => {
 });
 
 describe('updateTask resolver', () => {
+    it('should update task with a given id', async () => {
+        const task: Task | null = await TaskModel.findOne();
 
+        const updatedTask: Task | null = await taskResolvers.Mutation.updateTask()
+    });
+
+    it('throws error if id is incorrect', async () => {
+
+    });
+
+    it('throws error if there is no data provided to update', async () => {
+
+    });
+
+    it('throws error if there is no task with a given id', async () => {
+
+    });
 });
 
 describe('deleteTask resolver', () => {

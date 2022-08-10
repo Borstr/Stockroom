@@ -59,6 +59,7 @@ const productResolvers = {
             info: any
         ) => {
             if(product && product.id && product.id.length < 24) throw new UserInputError('Incorrect id.');
+            
             const updatedProductFields: any = {};
             const productKeys: string[] = Object.keys(product);
 

@@ -34,8 +34,29 @@ const taskResolvers = {
 
             return task;
         },
-        updateTask: async (parent: any, { task: { title, entryDate, finishDate, products }}: { task: Task }, context: any, info: any) => {
-            
+        updateTask: async (
+            parent: any, 
+            { task }: { task: Task }, 
+            context: any, 
+            info: any
+        ) => {
+            if(task && task.id && task.id.length < 24) throw new UserInputError('Incorrect id.');
+
+            const updatedTaskFields: any = {};
+            const taskKeys: string[] = Object.keys(task);
+
+            if(taskKeys.length <= 1) throw new UserInputError('Missing update data.');
+
+            for(let i = 0; i < taskKeys.length; i++) {
+                const taskKey: string = taskKeys[i];
+                if(taskKey !== 'id') updatedTaskFields[taskKey] = task[taskKey as keyof Task];
+            }
+
+            const updatedTask: Task | null = await TaskModel.findByIdAndUpdate(task.id, updatedTaskFields, { new: true }).populate('products.product');
+
+            if(!updatedTask) throw new UserInputError('We couldn\'find a task with a given ID.');
+
+            return updatedTask;
         },
         deleteTask: async (parent: any, { task: { title, entryDate, finishDate, products }}: { task: Task }, context: any, info: any) => {
 
