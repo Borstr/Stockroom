@@ -11,11 +11,11 @@ const productResolvers = {
             context: any, 
             info: any
         ) => {
-                if(!id) throw new UserInputError('Missing product id.');
-                if(id.length !== 24) throw new UserInputError('Incorrect id.');
+                if(!id) throw new UserInputError('Missing product ID. [PRODUCT]');
+                if(id.length !== 24) throw new UserInputError('Incorrect ID. [PRODUCT]');
 
                 const product: Product | null = await ProductModel.findById(id);
-                if(!product) throw new UserInputError('No product with a given id.');
+                if(!product) throw new UserInputError('No product with a given ID. [PRODUCT]');
 
                 return product;
             },
@@ -26,7 +26,7 @@ const productResolvers = {
             context: any, 
             info: any
         ) => {
-            if(!filterBy || (filterBy && filterBy.length === 0)) throw new UserInputError('Missing filter data.');
+            if(!filterBy || (filterBy && filterBy.length === 0)) throw new UserInputError('Missing filter data. [PRODUCT]');
             if(!sortBy) return ProductModel.find(filterData(filterBy));
 
             return ProductModel.find(filterData(filterBy)).sort(sortData(sortBy));
@@ -37,7 +37,7 @@ const productResolvers = {
             context: any, 
             info: any
         ) => {
-            if(!sortBy || (sortBy && sortBy.length === 0)) throw new UserInputError('Missing sorting data.');
+            if(!sortBy || (sortBy && sortBy.length === 0)) throw new UserInputError('Missing sorting data. [PRODUCT]');
             if(filterBy) return ProductModel.find(filterData(filterBy)).sort(sortData(sortBy));
             return ProductModel.find({}).sort(sortData(sortBy));
         }
@@ -49,7 +49,7 @@ const productResolvers = {
             context: any, 
             info: any
         ) => {
-            if(!color || !title) throw new UserInputError('Missing required fields.');
+            if(!color || !title) throw new UserInputError('Missing required fields. [PRODUCT]');
             return await ProductModel.create({ color, title, model, inStock, inDelivery, width, length, height, imagePath });
         },
         updateProduct: async (
@@ -58,12 +58,12 @@ const productResolvers = {
             context: any,
             info: any
         ) => {
-            if(product && product.id && product.id.length < 24) throw new UserInputError('Incorrect id.');
+            if(product && product.id && product.id.length < 24) throw new UserInputError('Incorrect ID. [PRODUCT]');
             
             const updatedProductFields: any = {};
             const productKeys: string[] = Object.keys(product);
 
-            if(productKeys.length <= 1) throw new UserInputError('Missing update data.');
+            if(productKeys.length <= 1) throw new UserInputError('Missing update data. [PRODUCT]');
 
             for(let i = 0; i < productKeys.length; i++) {
                 const productKey: string = productKeys[i];
@@ -72,7 +72,7 @@ const productResolvers = {
 
             const updatedProduct: Product | null = await ProductModel.findByIdAndUpdate(product.id, updatedProductFields, { new: true });
 
-            if(!updatedProduct) throw new UserInputError('We couldn\'find a product with a given ID.');
+            if(!updatedProduct) throw new UserInputError('We couldn\'find a product with a given ID. [PRODUCT]');
             
             return updatedProduct;
         },
@@ -81,11 +81,11 @@ const productResolvers = {
             { id }: { id: string }, 
             context:any, 
             info:any) => {
-                if(id.length < 24) throw new UserInputError('Incorrect id.');
+                if(id.length < 24) throw new UserInputError('Incorrect ID. [PRODUCT]');
 
                 const deletedProduct: Product | null = await ProductModel.findByIdAndDelete(id);
 
-                if(!deletedProduct) throw new UserInputError('We couldn\'find a product with a given ID.');
+                if(!deletedProduct) throw new UserInputError('We couldn\'find a product with a given ID. [PRODUCT]');
 
                 return deletedProduct;
             }

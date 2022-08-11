@@ -54,7 +54,7 @@ describe('getTask resolver', () => {
         try {
             await taskResolvers.Query.getTask({}, { id: '' }, {}, {});
         } catch(err) {
-            expect(err).toStrictEqual(new UserInputError('Missing task id.'));
+            expect(err).toStrictEqual(new UserInputError('Missing task ID. [TASK]'));
         }
     });
 
@@ -62,7 +62,7 @@ describe('getTask resolver', () => {
         try {
             await taskResolvers.Query.getTask({}, { id: '12345678901234567890123' }, {}, {});
         } catch(err) {
-            expect(err).toStrictEqual(new UserInputError('Incorrect id.'));
+            expect(err).toStrictEqual(new UserInputError('Incorrect ID. [TASK]'));
         }
     });
 
@@ -70,7 +70,7 @@ describe('getTask resolver', () => {
         try {
             await taskResolvers.Query.getTask({}, { id: '123456789012345678901234' }, {}, {});
         } catch(err) {
-            expect(err).toStrictEqual(new UserInputError('No task with a given id.'));
+            expect(err).toStrictEqual(new UserInputError('No task with a given ID. [TASK]'));
         }
     });
 });
@@ -89,7 +89,7 @@ describe('getTasks resolver', () => {
         try {
             await taskResolvers.Query.getTasks();
         } catch(err) {
-            expect(err).toStrictEqual(new UserInputError('No tasks found.'));
+            expect(err).toStrictEqual(new UserInputError('No tasks found. [TASK]'));
         }
     });
 });
@@ -159,7 +159,7 @@ describe('createTask resolver', () => {
                 {}
             );
         } catch(err) {
-            expect(err).toStrictEqual(new UserInputError('Missing title.'));
+            expect(err).toStrictEqual(new UserInputError('Missing title. [TASK]'));
         }
     });
 
@@ -185,7 +185,7 @@ describe('createTask resolver', () => {
                 {}
             );
         } catch(err) {
-            expect(err).toStrictEqual(new UserInputError('Missing entry date.'));
+            expect(err).toStrictEqual(new UserInputError('Missing entry date. [TASK]'));
         }
     });
 
@@ -211,7 +211,7 @@ describe('createTask resolver', () => {
                 {}
             );
         } catch(err) {
-            expect(err).toStrictEqual(new UserInputError('Missing finish date.'));
+            expect(err).toStrictEqual(new UserInputError('Missing finish date. [TASK]'));
         }
     });
 
@@ -232,7 +232,7 @@ describe('createTask resolver', () => {
                 {}
             );
         } catch(err) {
-            expect(err).toStrictEqual(new UserInputError('Missing products.'));
+            expect(err).toStrictEqual(new UserInputError('Missing products. [TASK]'));
         }
     });
 });
@@ -270,7 +270,7 @@ describe('updateTask resolver', () => {
                 {}
             );
         } catch(err) {
-            expect(err).toStrictEqual(new UserInputError('Incorrect id.'));
+            expect(err).toStrictEqual(new UserInputError('Incorrect ID. [TASK]'));
         }
     });
 
@@ -287,7 +287,7 @@ describe('updateTask resolver', () => {
                 {}
             );
         } catch(err) {
-            expect(err).toStrictEqual(new UserInputError('Missing update data.'));
+            expect(err).toStrictEqual(new UserInputError('Missing update data. [TASK]'));
         }
     });
 
@@ -305,7 +305,7 @@ describe('updateTask resolver', () => {
                 {}
             );
         } catch(err) {
-            expect(err).toStrictEqual(new UserInputError('We couldn\'find a task with a given ID.'));
+            expect(err).toStrictEqual(new UserInputError('We couldn\'find a task with a given ID. [TASK]'));
         }
     });
 });
@@ -336,7 +336,7 @@ describe('deleteTask resolver', () => {
                 {}
             );
         } catch(err) {
-            expect(err).toStrictEqual(new UserInputError('Incorrect id.'));
+            expect(err).toStrictEqual(new UserInputError('Incorrect ID. [TASK]'));
         }
     });
 
@@ -349,7 +349,7 @@ describe('deleteTask resolver', () => {
                 {}
             );
         } catch(err) {
-            expect(err).toStrictEqual(new UserInputError('We couldn\'find a task with a given ID.'));
+            expect(err).toStrictEqual(new UserInputError('We couldn\'find a task with a given ID. [TASK]'));
         }
     });
 });

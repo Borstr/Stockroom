@@ -50,7 +50,7 @@ describe('getProduct resolver', () => {
         try {
             await productResolvers.Query.getProduct({}, { id: '' }, {}, {});
         } catch(err) {
-            expect(err).toStrictEqual(new UserInputError('Missing product id.'));
+            expect(err).toStrictEqual(new UserInputError('Missing product ID. [PRODUCT]'));
         }
     });
 
@@ -58,7 +58,7 @@ describe('getProduct resolver', () => {
         try {
             await productResolvers.Query.getProduct({}, { id: 'abc' }, {}, {});
         } catch(err) {
-            expect(err).toStrictEqual(new UserInputError('Incorrect id.'));
+            expect(err).toStrictEqual(new UserInputError('Incorrect ID. [PRODUCT]'));
         }
     });
 
@@ -66,7 +66,7 @@ describe('getProduct resolver', () => {
         try {
             await productResolvers.Query.getProduct({}, { id: '62e11d5bc9a34411570b4a4b' }, {}, {});
         } catch(err) {
-            expect(err).toStrictEqual(new UserInputError('No product with a given id.'));
+            expect(err).toStrictEqual(new UserInputError('No product with a given ID. [PRODUCT]'));
         }
     });
 });
@@ -170,7 +170,7 @@ describe('getFilteredProducts resolver', () => {
                 {}
             );
         } catch(err) {
-            expect(err).toStrictEqual(new UserInputError('Missing filter data.'));
+            expect(err).toStrictEqual(new UserInputError('Missing filter data. [PRODUCT]'));
         }
     });
 });
@@ -229,7 +229,7 @@ describe('getSortedProducts resolver', () => {
         try {
             await productResolvers.Query.getSortedProducts({}, { sortBy: [] }, {}, {});
         } catch(err) {
-            expect(err).toStrictEqual(new UserInputError('Missing sorting data.'));
+            expect(err).toStrictEqual(new UserInputError('Missing sorting data. [PRODUCT]'));
         }
     });
 });
@@ -275,7 +275,7 @@ describe('createProduct resolver', () => {
         try {
             await productResolvers.Mutation.createProduct({}, { product: {}}, {}, {});
         } catch(err) {
-            expect(err).toStrictEqual(new UserInputError('Missing required fields.'));
+            expect(err).toStrictEqual(new UserInputError('Missing required fields. [PRODUCT]'));
         }
     });
 });
@@ -325,7 +325,7 @@ describe('updateProduct resolver', () => {
                 {}
             );
         } catch(err) {
-            expect(err).toStrictEqual(new UserInputError('We couldn\'find a product with a given id.'));
+            expect(err).toStrictEqual(new UserInputError('We couldn\'find a product with a given ID. [PRODUCT]'));
         }
     });
 
@@ -342,7 +342,7 @@ describe('updateProduct resolver', () => {
                 {}
             );
         } catch(err) {
-            expect(err).toStrictEqual(new UserInputError('Incorrect id.'));
+            expect(err).toStrictEqual(new UserInputError('Incorrect ID. [PRODUCT]'));
         }
     });
 
@@ -359,7 +359,7 @@ describe('updateProduct resolver', () => {
                 {}
             );
         } catch(err) {
-            expect(err).toStrictEqual(new UserInputError('Missing update data.'));
+            expect(err).toStrictEqual(new UserInputError('Missing update data. [PRODUCT]'));
         }
     });
 });
@@ -387,7 +387,7 @@ describe('deleteProduct resolver', () => {
                 {}
             );
         } catch(err) {
-            expect(err).toStrictEqual(new UserInputError('We couldn\'find a product with a given ID.'));
+            expect(err).toStrictEqual(new UserInputError('We couldn\'find a product with a given ID. [PRODUCT]'));
         }
     });
 
@@ -402,7 +402,7 @@ describe('deleteProduct resolver', () => {
                 {}
             );
         } catch(err) {
-            expect(err).toStrictEqual(new UserInputError('Incorrect id.'));
+            expect(err).toStrictEqual(new UserInputError('Incorrect ID. [PRODUCT]'));
         }
     });
 });
