@@ -1,3 +1,5 @@
+import { UserInputError } from 'apollo-server-express';
+
 import { Order, OrderBy } from './types';
 
 function filterData(data: OrderBy[]) {
@@ -39,4 +41,33 @@ function sortData(data: OrderBy[]) {
     return sortData;
 }
 
-export { filterData, sortData }
+function resolverValidators(validations: { validator: string, errorMessage: string, data: any }[]) {
+    for(let validation of validations) {
+        const { validator, errorMessage, data }: { validator: string, errorMessage: string, data: any } = validation;
+        
+        switch(validator) {
+            case 'ID':
+                if(!data || data.length !== 24) throw new UserInputError(`Incorrect ID. [${errorMessage}]`);
+                break;
+            case 'REQUIRED_FIELDS':
+                const keys: any = Object.keys(data.object);
+                const requiredFields: string[] = data.fields;
+
+                for(let i = 0; i < keys.length; i++) {
+                    if(!requiredFields.includes(keys[i]) || !data.object[keys[i]]) {
+                        throw new UserInputError(`Missing required field (${requiredFields[i]}). [${errorMessage}]`);
+                    }
+                }
+                break;
+            case 'EXIST':
+                if(!data || (data.length && data.length === 0)) throw new UserInputError(errorMessage);
+                break;
+            case 'UPDATE_DATA':
+                if(Object.keys(data).length <= 0) throw new UserInputError(`Missing update data. [${errorMessage}]`);
+                break;
+            default: break;
+    }
+    }
+}
+
+export { filterData, sortData, resolverValidators }

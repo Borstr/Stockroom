@@ -20,11 +20,11 @@ beforeEach(async () => {
 });
 
 afterEach(async () => {
-    await ProductModel.deleteMany();
+    await ProductModel.deleteMany({});
 });
 
 afterAll(async () => {
-    await ProductModel.deleteMany();
+    await ProductModel.deleteMany({});
     await mongoose.disconnect();
 });
 

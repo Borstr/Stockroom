@@ -22,13 +22,13 @@ beforeEach(async () => {
 });
 
 afterEach(async () => {
-    await TaskModel.deleteMany();
-    await ProductModel.deleteMany();
+    await TaskModel.deleteMany({});
+    await ProductModel.deleteMany({});
 });
 
 afterAll(async () => {
-    await TaskModel.deleteMany();
-    await ProductModel.deleteMany();
+    await TaskModel.deleteMany({});
+    await ProductModel.deleteMany({});
     await mongoose.disconnect();
 });
 
@@ -46,7 +46,7 @@ describe('getTask resolver', () => {
             expect(task).toHaveProperty('entryDate');
             expect(task).toHaveProperty('finishDate');
             
-            expect(task.products).toHaveLength(1);
+            if(task) expect(task.products).toHaveLength(1);
         }
     });
 
@@ -159,7 +159,7 @@ describe('createTask resolver', () => {
                 {}
             );
         } catch(err) {
-            expect(err).toStrictEqual(new UserInputError('Missing title. [TASK]'));
+            expect(err).toStrictEqual(new UserInputError('Missing required field (title). [TASK]'));
         }
     });
 
@@ -185,7 +185,7 @@ describe('createTask resolver', () => {
                 {}
             );
         } catch(err) {
-            expect(err).toStrictEqual(new UserInputError('Missing entry date. [TASK]'));
+            expect(err).toStrictEqual(new UserInputError('Missing required field (entryDate). [TASK]'));
         }
     });
 
@@ -211,7 +211,7 @@ describe('createTask resolver', () => {
                 {}
             );
         } catch(err) {
-            expect(err).toStrictEqual(new UserInputError('Missing finish date. [TASK]'));
+            expect(err).toStrictEqual(new UserInputError('Missing required field (finishDate). [TASK]'));
         }
     });
 
@@ -232,7 +232,7 @@ describe('createTask resolver', () => {
                 {}
             );
         } catch(err) {
-            expect(err).toStrictEqual(new UserInputError('Missing products. [TASK]'));
+            expect(err).toStrictEqual(new UserInputError('Missing required field (products). [TASK]'));
         }
     });
 });
