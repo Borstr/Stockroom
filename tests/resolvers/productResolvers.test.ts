@@ -46,7 +46,7 @@ describe('getProduct resolver', () => {
         expect(product).toHaveProperty('imagePath');
     });
 
-    it('throws an error when id is missing', async () => {
+    it('should throw an error when ID is missing', async () => {
         try {
             await productResolvers.Query.getProduct({}, { id: '' }, {}, {});
         } catch(err) {
@@ -54,7 +54,7 @@ describe('getProduct resolver', () => {
         }
     });
 
-    it('throws an error when id is incorrect', async () => {
+    it('should throw an error when ID is incorrect', async () => {
         try {
             await productResolvers.Query.getProduct({}, { id: 'abc' }, {}, {});
         } catch(err) {
@@ -62,7 +62,7 @@ describe('getProduct resolver', () => {
         }
     });
 
-    it('throws an error if there is no user with a given id', async () => {
+    it('should throw an error if there is no user with a given ID', async () => {
         try {
             await productResolvers.Query.getProduct({}, { id: '62e11d5bc9a34411570b4a4b' }, {}, {});
         } catch(err) {
@@ -94,7 +94,7 @@ describe('getAllProducts resolver', () => {
 });
 
 describe('getFilteredProducts resolver', () => {
-    it('shows products equal to filter setting', async () => {
+    it('should show products equal to filter setting', async () => {
         const products: Product[] | null = await productResolvers.Query.getFilteredProducts({}, { filterBy: [ { order: 'EQ', field: 'title', value: 'Pen' } ] }, {}, {});
         
         expect(products).toHaveLength(2);
@@ -104,7 +104,7 @@ describe('getFilteredProducts resolver', () => {
         }
     });
 
-    it('shows products lower, than filter setting', async () => {
+    it('should show products lower, than filter setting', async () => {
         const products: Product[] | null = await productResolvers.Query.getFilteredProducts({}, { filterBy: [ { order: 'ASC', field: 'inStock', value: '1' } ] }, {}, {}); 
 
         expect(products).toHaveLength(3);
@@ -114,7 +114,7 @@ describe('getFilteredProducts resolver', () => {
         }
     });
 
-    it('shows products higher, than filter setting', async () => {
+    it('should show products higher, than filter setting', async () => {
         const products: Product[] | null = await productResolvers.Query.getFilteredProducts({}, { filterBy: [ { order: 'DESC', field: 'inStock', value: '3' } ] }, {}, {})
         
         expect(products).toHaveLength(2);
@@ -124,7 +124,7 @@ describe('getFilteredProducts resolver', () => {
         }
     });
 
-    it('shows products with multiple filter settings', async () => {
+    it('should show products with multiple filter settings', async () => {
         const products: Product[] | null = await productResolvers.Query.getFilteredProducts(
             {}, 
             { 
@@ -145,7 +145,7 @@ describe('getFilteredProducts resolver', () => {
         }
     });
 
-    it('shows products with given filter and sort setting', async () => {
+    it('should show products with given filter and sort setting', async () => {
         const products: Product[] | null = await productResolvers.Query.getFilteredProducts(
             {},
             {
@@ -161,7 +161,7 @@ describe('getFilteredProducts resolver', () => {
         products.map((product: Product, i: number) => expect(product.inDelivery).toBeGreaterThan(Number((i - 1) > 0 ? products[i - 1].inDelivery : 0)));
     });
 
-    it('throws error if there is filter setting missing', async () => {
+    it('should throw an error if there is filter setting missing', async () => {
         try {
             await productResolvers.Query.getFilteredProducts(
                 {},
@@ -176,7 +176,7 @@ describe('getFilteredProducts resolver', () => {
 });
 
 describe('getSortedProducts resolver', () => {
-    it('shows products lower, than sort setting', async () => {
+    it('should show products lower, than sort setting', async () => {
         const products: Product[] | null = await productResolvers.Query.getSortedProducts({}, { sortBy: [{ field: 'inDelivery', order: 'DESC' }] }, {}, {});
 
         expect(products).toHaveLength(4);
@@ -184,7 +184,7 @@ describe('getSortedProducts resolver', () => {
         products.map((product: Product, i: number) => expect(product.inDelivery).toBeLessThan(Number((i - 1) > 0 ? products[i - 1].inDelivery : 5)));
     });
 
-    it('shows products higher, than sort setting', async () => {
+    it('should show products higher, than sort setting', async () => {
         const products: Product[] | null = await productResolvers.Query.getSortedProducts({}, { sortBy: [{ field: 'inDelivery', order: 'ASC' }] }, {}, {});
 
         expect(products).toHaveLength(4);
@@ -192,7 +192,7 @@ describe('getSortedProducts resolver', () => {
         products.map((product: Product, i: number) => expect(product.inDelivery).toBeGreaterThan(Number((i - 1) > 0 ? products[i - 1].inDelivery : 0)));
     });
 
-    it('shows products with multiple sort settings', async () => {
+    it('should show products with multiple sort settings', async () => {
         const products: Product[] | null = await productResolvers.Query.getSortedProducts(
             {}, 
             { sortBy: [
@@ -209,7 +209,7 @@ describe('getSortedProducts resolver', () => {
         products.map((product: Product, i: number) => expect(product.inStock).toBeLessThan(Number((i - 1) > 0 ? products[i - 1].inStock : 5)));
     });
 
-    it('shows products with given sort and filter settings', async () => {
+    it('should show products with given sort and filter settings', async () => {
         const products: Product[] | null = await productResolvers.Query.getSortedProducts(
             {}, 
             { 
@@ -225,7 +225,7 @@ describe('getSortedProducts resolver', () => {
         products.map((product: Product, i: number) => expect(product.inDelivery).toBeGreaterThan(Number((i - 1) > 0 ? products[i - 1].inDelivery : 0)));
     });
     
-    it('throws error if there is no sort setting', async () => {
+    it('should throw an error if there is no sort setting', async () => {
         try {
             await productResolvers.Query.getSortedProducts({}, { sortBy: [] }, {}, {});
         } catch(err) {
@@ -235,7 +235,7 @@ describe('getSortedProducts resolver', () => {
 });
 
 describe('createProduct resolver', () => {
-    it('creates a new product', async () => {
+    it('should create a new product', async () => {
         const newProduct: Product | null = await productResolvers.Mutation.createProduct(
             {}, 
             { 
@@ -271,7 +271,7 @@ describe('createProduct resolver', () => {
         expect(newProduct.inDelivery).toBe(11);
     });
 
-    it('throws error if there are missing essential fields', async () => {
+    it('should throw an error if there are missing essential fields', async () => {
         try {
             await productResolvers.Mutation.createProduct({}, { product: {}}, {}, {});
         } catch(err) {
@@ -281,7 +281,7 @@ describe('createProduct resolver', () => {
 });
 
 describe('updateProduct resolver', () => {
-    it('updates product with a given id', async () => {
+    it('should update product with a given ID', async () => {
         const product: Product | null = await ProductModel.findOne({});
 
         const updatedProduct: Product | null = await productResolvers.Mutation.updateProduct(
@@ -311,7 +311,7 @@ describe('updateProduct resolver', () => {
         }
     });
 
-    it('throws error if there is no product with a given id', async () => {
+    it('should throw an error if there is no product with a given ID', async () => {
         try {
             await productResolvers.Mutation.updateProduct(
                 {}, 
@@ -325,11 +325,11 @@ describe('updateProduct resolver', () => {
                 {}
             );
         } catch(err) {
-            expect(err).toStrictEqual(new UserInputError('We couldn\'find a product with a given ID.'));
+            expect(err).toStrictEqual(new UserInputError('We couldn\'find a product with a given id.'));
         }
     });
 
-    it('throws error if provided id is incorrect', async () => {
+    it('should throw an error if provided ID is incorrect', async () => {
         try {
             await productResolvers.Mutation.updateProduct(
                 {}, 
@@ -346,7 +346,7 @@ describe('updateProduct resolver', () => {
         }
     });
 
-    it('throws error if there is no data for update', async () => {
+    it('should throw an error if there is no data for update', async () => {
         try {
             await productResolvers.Mutation.updateProduct(
                 {}, 
@@ -365,7 +365,7 @@ describe('updateProduct resolver', () => {
 });
 
 describe('deleteProduct resolver', () => {
-    it('deletes product with a given id', async () => {
+    it('should delete product with a given ID', async () => {
         const newProduct: Product | null = await ProductModel.create({ title: 'Test', color: 'red' });
 
         if(newProduct && newProduct.id) {
@@ -376,7 +376,7 @@ describe('deleteProduct resolver', () => {
         }
     });
 
-    it('throws error if there is no product with a given id', async () => {
+    it('shoould throw an error if there is no product with a given ID', async () => {
         try {
             await productResolvers.Mutation.deleteProduct(
                 {}, 
@@ -391,7 +391,7 @@ describe('deleteProduct resolver', () => {
         }
     });
 
-    it('throws error if provided id is incorrect', async () => {
+    it('should throw an error if provided ID is incorrect', async () => {
         try {
             await productResolvers.Mutation.deleteProduct(
                 {}, 

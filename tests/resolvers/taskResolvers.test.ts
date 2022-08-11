@@ -50,7 +50,7 @@ describe('getTask resolver', () => {
         }
     });
 
-    it('throws error when id is missing', async () => {
+    it('should throw an error if ID is missing', async () => {
         try {
             await taskResolvers.Query.getTask({}, { id: '' }, {}, {});
         } catch(err) {
@@ -58,7 +58,7 @@ describe('getTask resolver', () => {
         }
     });
 
-    it('throws error when id is incorrect', async () => {
+    it('should throw an error if ID is incorrect', async () => {
         try {
             await taskResolvers.Query.getTask({}, { id: '12345678901234567890123' }, {}, {});
         } catch(err) {
@@ -66,7 +66,7 @@ describe('getTask resolver', () => {
         }
     });
 
-    it('throws error when there is no task with a given id', async () => {
+    it('should throw an error when there is no task with a given ID', async () => {
         try {
             await taskResolvers.Query.getTask({}, { id: '123456789012345678901234' }, {}, {});
         } catch(err) {
@@ -83,7 +83,7 @@ describe('getTasks resolver', () => {
         expect(tasks).toHaveLength(4);
     });
 
-    it('throws error when there are no tasks', async () => {
+    it('should throw an error when there are no tasks', async () => {
         await TaskModel.deleteMany();
 
         try {
@@ -95,7 +95,7 @@ describe('getTasks resolver', () => {
 });
 
 describe('createTask resolver', () => {
-    it('should create task with given data', async () => {
+    it('should create task with the given data', async () => {
         const product: Product | null = await ProductModel.findOne();
         
         if(product && product.id) {
@@ -137,7 +137,7 @@ describe('createTask resolver', () => {
         }
     });
 
-    it('throws error if title is missing', async () => {
+    it('should throw an error if title is missing', async () => {
         try {
             const product: Product | null = await ProductModel.findOne();
 
@@ -163,7 +163,7 @@ describe('createTask resolver', () => {
         }
     });
 
-    it('throws error if entry date is missing', async () => {
+    it('should throw an error if entryDate is missing', async () => {
         try {
             const product: Product | null = await ProductModel.findOne();
 
@@ -189,7 +189,7 @@ describe('createTask resolver', () => {
         }
     });
 
-    it('throws error if finish date is missing', async () => {
+    it('should throw an error if finishDate is missing', async () => {
         try {
             const product: Product | null = await ProductModel.findOne();
 
@@ -215,7 +215,7 @@ describe('createTask resolver', () => {
         }
     });
 
-    it('throws error if there are no products', async () => {
+    it('should throw an error if there are no products', async () => {
         try {
             await taskResolvers.Mutation.createTask(
                 {}, 
@@ -238,7 +238,7 @@ describe('createTask resolver', () => {
 });
 
 describe('updateTask resolver', () => {
-    it('should update task with a given id', async () => {
+    it('should update task with a given ID', async () => {
         const task: Task | null = await TaskModel.findOne();
 
         const updatedTask: Task | null = await taskResolvers.Mutation.updateTask(
@@ -256,7 +256,7 @@ describe('updateTask resolver', () => {
         expect(task?.title).not.toBe(updatedTask?.title);
     });
 
-    it('throws error if id is incorrect', async () => {
+    it('should throw an error if ID is incorrect', async () => {
         try {
             await taskResolvers.Mutation.updateTask(
                 {},
@@ -274,7 +274,7 @@ describe('updateTask resolver', () => {
         }
     });
 
-    it('throws error if there is no data provided to update', async () => {
+    it('should throw an error if there is no data provided to update', async () => {
         try {
             await taskResolvers.Mutation.updateTask(
                 {},
@@ -291,7 +291,7 @@ describe('updateTask resolver', () => {
         }
     });
 
-    it('throws error if there is no task with a given id', async () => {
+    it('should throw an error if there is no task with a given ID', async () => {
         try {
             await taskResolvers.Mutation.updateTask(
                 {},
@@ -311,7 +311,7 @@ describe('updateTask resolver', () => {
 });
 
 describe('deleteTask resolver', () => {
-    it('should delete task with a given id', async () => {
+    it('should delete task with a given ID', async () => {
         const taskToDelete: Task | null = await TaskModel.findOne();
 
         const deletedTask: Task | null = await taskResolvers.Mutation.deleteTask(
@@ -327,7 +327,7 @@ describe('deleteTask resolver', () => {
         expect(task).toBe(null);
     });
 
-    it('throws error if id is incorrect', async () => {
+    it('should throw an error if ID is incorrect', async () => {
         try {
             const deletedTask: Task | null = await taskResolvers.Mutation.deleteTask(
                 {},
@@ -340,7 +340,7 @@ describe('deleteTask resolver', () => {
         }
     });
 
-    it('throws error if there is no task with a given id', async () => {
+    it('should throw an error if there is no task with a given ID', async () => {
         try {
             const deletedTask: Task | null = await taskResolvers.Mutation.deleteTask(
                 {},
