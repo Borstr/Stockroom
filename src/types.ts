@@ -29,10 +29,10 @@ interface Product {
 
 interface Task {
     id: string,
-    title: string;
-    products: ProductInDemand[];
-    entryDate: String | Date;
-    finishDate: String | Date;
+    title?: string;
+    products?: ProductInDemand[];
+    entryDate?: String | Date;
+    finishDate?: String | Date;
 }
 
 interface ProductInDemand {

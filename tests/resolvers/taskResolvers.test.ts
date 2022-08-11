@@ -122,7 +122,7 @@ describe('createTask resolver', () => {
             expect(newTask).not.toBe(null);
             expect(task).not.toBe(null);
 
-            if(task) {
+            if(task && task.products) {
                 expect(task.products[0].product).toHaveProperty('title');
                 expect(task.products[0].product).toHaveProperty('color');
                 expect(task.products[0].product).toHaveProperty('model');
@@ -241,22 +241,115 @@ describe('updateTask resolver', () => {
     it('should update task with a given id', async () => {
         const task: Task | null = await TaskModel.findOne();
 
-        const updatedTask: Task | null = await taskResolvers.Mutation.updateTask()
+        const updatedTask: Task | null = await taskResolvers.Mutation.updateTask(
+            {},
+            {
+                task: {
+                    id: task ? task.id : '',
+                    title: 'New title'
+                }
+            },
+            {},
+            {}
+        );
+
+        expect(task?.title).not.toBe(updatedTask?.title);
     });
 
     it('throws error if id is incorrect', async () => {
-
+        try {
+            await taskResolvers.Mutation.updateTask(
+                {},
+                {
+                    task: {
+                        id: '1',
+                        title: 'New title'
+                    }
+                },
+                {},
+                {}
+            );
+        } catch(err) {
+            expect(err).toStrictEqual(new UserInputError('Incorrect id.'));
+        }
     });
 
     it('throws error if there is no data provided to update', async () => {
-
+        try {
+            await taskResolvers.Mutation.updateTask(
+                {},
+                {
+                    task: {
+                        id: '123456789012345678901234'
+                    }
+                },
+                {},
+                {}
+            );
+        } catch(err) {
+            expect(err).toStrictEqual(new UserInputError('Missing update data.'));
+        }
     });
 
     it('throws error if there is no task with a given id', async () => {
-
+        try {
+            await taskResolvers.Mutation.updateTask(
+                {},
+                {
+                    task: {
+                        id: '123456789012345678901234',
+                        title: 'New title'
+                    }
+                },
+                {},
+                {}
+            );
+        } catch(err) {
+            expect(err).toStrictEqual(new UserInputError('We couldn\'find a task with a given ID.'));
+        }
     });
 });
 
 describe('deleteTask resolver', () => {
+    it('should delete task with a given id', async () => {
+        const taskToDelete: Task | null = await TaskModel.findOne();
 
+        const deletedTask: Task | null = await taskResolvers.Mutation.deleteTask(
+            {},
+            { id: taskToDelete ? taskToDelete.id : '' },
+            {},
+            {}
+        );
+
+        const task: Task | null = await TaskModel.findById(taskToDelete ? taskToDelete.id : '');
+        
+        expect(deletedTask).not.toBe(null);
+        expect(task).toBe(null);
+    });
+
+    it('throws error if id is incorrect', async () => {
+        try {
+            const deletedTask: Task | null = await taskResolvers.Mutation.deleteTask(
+                {},
+                { id: '1' },
+                {},
+                {}
+            );
+        } catch(err) {
+            expect(err).toStrictEqual(new UserInputError('Incorrect id.'));
+        }
+    });
+
+    it('throws error if there is no task with a given id', async () => {
+        try {
+            const deletedTask: Task | null = await taskResolvers.Mutation.deleteTask(
+                {},
+                { id: '123456789012345678901234' },
+                {},
+                {}
+            );
+        } catch(err) {
+            expect(err).toStrictEqual(new UserInputError('We couldn\'find a task with a given ID.'));
+        }
+    });
 });

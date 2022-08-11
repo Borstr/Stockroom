@@ -18,7 +18,7 @@ const taskResolvers = {
         getTasks: async () => {
             const tasks: Task[] | null = await TaskModel.find({}).populate('products.product');
 
-            if(!tasks) throw new UserInputError('No tasks found.');
+            if(tasks.length === 0) throw new UserInputError('No tasks found.');
 
             return tasks;
         }
@@ -58,8 +58,14 @@ const taskResolvers = {
 
             return updatedTask;
         },
-        deleteTask: async (parent: any, { task: { title, entryDate, finishDate, products }}: { task: Task }, context: any, info: any) => {
+        deleteTask: async (parent: any, { id }: { id: string }, context: any, info: any) => {
+            if(id && id.length < 24) throw new UserInputError('Incorrect id.');
 
+            const deletedTask: Task | null = await TaskModel.findByIdAndDelete(id);
+
+            if(!deletedTask) throw new UserInputError('We couldn\'find a task with a given ID.');
+
+            return deletedTask;
         }
     }
 }
