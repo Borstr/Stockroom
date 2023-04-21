@@ -9,6 +9,7 @@ type Task {
     products: [ProductInDemand]
     entryDate: String
     finishDate: String
+    instructions: String
 }
 
 extend type Query {
@@ -26,6 +27,7 @@ input TaskInput {
     products: [ProductInDemandInput]!
     entryDate: String!
     finishDate: String!
+    instructions: String
 }
 
 input TaskUpdateInput {
@@ -34,6 +36,7 @@ input TaskUpdateInput {
     products: [ProductInDemandInput]
     entryDate: String
     finishDate: String
+    instructions: String
 }
 
 extend type Mutation {

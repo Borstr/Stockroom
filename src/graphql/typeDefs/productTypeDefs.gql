@@ -17,13 +17,13 @@ enum Order {
     EQ
 }
 
-input FilterBy {
+input FilterProductsBy {
     field: String!
     order: Order!
     value: String!
 }
 
-input SortBy {
+input SortProductsBy {
     field: String!
     order: Order!
 }
@@ -31,8 +31,8 @@ input SortBy {
 type Query {
     getProduct(id: ID!): Product
     getAllProducts: [Product]
-    getFilteredProducts(filterBy: [FilterBy]!, sortBy: [SortBy]): [Product]
-    getSortedProducts(sortBy: [SortBy]!, filterBy: [FilterBy]): [Product]
+    getFilteredProducts(filterBy: [FilterProductsBy]!, sortBy: [SortProductsBy]): [Product]
+    getSortedProducts(sortBy: [SortProductsBy]!, filterBy: [FilterProductsBy]): [Product]
 }
 
 input ProductInput {

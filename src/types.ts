@@ -31,8 +31,9 @@ interface Task {
     id: string,
     title?: string;
     products?: ProductInDemand[];
-    entryDate?: String | Date;
-    finishDate?: String | Date;
+    entryDate?: string | Date;
+    finishDate?: string | Date;
+    instructions?: string;
 }
 
 interface ProductInDemand {

@@ -26,7 +26,7 @@ const taskResolvers = {
         }
     },
     Mutation: {
-        createTask: async (parent: any, { task: { title, entryDate, finishDate, products }}: { task: Task }, context: any, info: any) => {
+        createTask: async (parent: any, { task: { title, entryDate, finishDate, products, instructions }}: { task: Task }, context: any, info: any) => {
             resolverValidators([{
                 validator: 'REQUIRED_FIELDS', 
                 errorMessage: 'TASK', 
@@ -36,7 +36,7 @@ const taskResolvers = {
                 }
             }])
             
-            const task: Task | null = await (await TaskModel.create({ title, entryDate, finishDate, products })).populate('products.product');
+            const task: Task | null = await (await TaskModel.create({ title, entryDate, finishDate, products, instructions })).populate('products.product');
 
             return task;
         },

@@ -24,7 +24,8 @@ const TaskSchema = new mongoose.Schema<Task>({
     finishDate: {
         type: Date,
         required: true
-    }
+    },
+    instructions: String
 });
 
 const TaskModel = mongoose.model('task', TaskSchema);
